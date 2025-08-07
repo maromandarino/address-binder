@@ -4,15 +4,6 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { web3Enable, web3Accounts, web3FromSource } from '@polkadot/extension-dapp';
 import zkVerifyLogo from './assets/zk_Verify_logo_full_white.svg';
 
-// Modern zkVerify SVG logo
-const ZkVerifyLogo = () => (
-  <svg width="160" height="40" viewBox="0 0 160 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="2" y="2" width="36" height="36" rx="10" fill="#10B981"/>
-    <path d="M14 26L26 14M14 14L26 26" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/>
-    <text x="44" y="28" fontFamily="Inter, sans-serif" fontWeight="700" fontSize="2rem" fill="#10B981">zkVerify</text>
-  </svg>
-);
-
 function App() {
     // Substrate state
     const [substrateAccounts, setSubstrateAccounts] = useState([]);
@@ -24,6 +15,7 @@ function App() {
     const { signMessageAsync } = useSignMessage();
 
     // App logic state
+    const [allBindings, setAllBindings] = useState([]);
     const [canBind, setCanBind] = useState(false);
 
     // Update 'canBind' status whenever wallet connections change
@@ -76,6 +68,7 @@ function App() {
                 timestamp: new Date().toISOString()
             };
 
+            setAllBindings(prev => [...prev, binding]);
             alert('Binding signature generated successfully!');
 
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -154,7 +147,16 @@ function App() {
                 </div>
 
                 {/* Results Section */}
-                
+                {allBindings.length > 0 && (
+                    <div className="pt-4 space-y-4">
+                        <h3 className="text-xl font-semibold text-center">Generated Bindings</h3>
+                        <div className="bg-black rounded-lg p-4 max-h-60 overflow-y-auto border border-zinc-800">
+                            <pre className="text-xs text-gray-300 whitespace-pre-wrap">
+                                {JSON.stringify(allBindings, null, 2)}
+                            </pre>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
