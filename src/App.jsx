@@ -24,7 +24,6 @@ function App() {
     const { signMessageAsync } = useSignMessage();
 
     // App logic state
-    const [allBindings, setAllBindings] = useState([]);
     const [canBind, setCanBind] = useState(false);
 
     // Update 'canBind' status whenever wallet connections change
@@ -77,26 +76,25 @@ function App() {
                 timestamp: new Date().toISOString()
             };
 
-            setAllBindings(prev => [...prev, binding]);
             alert('Binding signature generated successfully!');
+
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            fetch(`${backendUrl}/add-binding`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(binding),
+            })
+              .then(response => response.text())
+              .then(data => {
+                console.log('Binding saved to backend:', data);
+              })
+              .catch(error => {
+                console.error('Error saving binding to backend:', error);
+              });
         } catch (error) {
             console.error("Binding error:", error);
             alert(`Failed to generate signature: ${error.message}`);
         }
-    };
-    
-    const handleDownload = () => {
-        if (allBindings.length === 0) {
-            alert('No bindings to download.');
-            return;
-        }
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allBindings, null, 2));
-        const downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "bindings.json");
-        document.body.appendChild(downloadAnchorNode);
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
     };
 
     return (
@@ -156,21 +154,7 @@ function App() {
                 </div>
 
                 {/* Results Section */}
-                {allBindings.length > 0 && (
-                    <div className="pt-4 space-y-4">
-                        <h3 className="text-xl font-semibold text-center">Generated Bindings</h3>
-                        <div className="bg-black rounded-lg p-4 max-h-60 overflow-y-auto border border-zinc-800">
-                            <pre className="text-xs text-gray-300 whitespace-pre-wrap">
-                                {JSON.stringify(allBindings, null, 2)}
-                            </pre>
-                        </div>
-                        <div className="text-center">
-                            <button onClick={handleDownload} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
-                                Download Bindings.json
-                            </button>
-                        </div>
-                    </div>
-                )}
+                
             </div>
         </div>
     );
