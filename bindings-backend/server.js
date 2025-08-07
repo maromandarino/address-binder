@@ -4,7 +4,9 @@ const Airtable = require('airtable');
 const cors = require('cors');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: 'https://address-binder-f2iqdlqaz-mmarinelli-horizenlabs-projects.vercel.app'
+  }));
 app.use(express.json());
 
 const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
