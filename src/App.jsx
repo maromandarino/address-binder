@@ -69,7 +69,6 @@ function App() {
             };
 
             setAllBindings(prev => [...prev, binding]);
-            alert('Binding signature generated successfully!');
 
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
             fetch(`${backendUrl}/add-binding`, {

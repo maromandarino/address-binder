@@ -5,10 +5,14 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors({
-    origin: 'https://address-binder-f2iqdlqaz-mmarinelli-horizenlabs-projects.vercel.app',
-    origin: 'https://address-binder.vercel.app',
-    origin: 'https://address-binder-git-main-mmarinelli-horizenlabs-projects.vercel.app/'
-  }));
+  origin: [
+    'https://address-binder.vercel.app',
+    'https://address-binder-f2iqdlqaz-mmarinelli-horizenlabs-projects.vercel.app',
+    'https://address-binder-git-main-mmarinelli-horizenlabs-projects.vercel.app/'
+  ],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type']
+}));
 app.use(express.json());
 
 const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
