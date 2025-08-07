@@ -5,7 +5,9 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors({
-    origin: 'https://address-binder-f2iqdlqaz-mmarinelli-horizenlabs-projects.vercel.app'
+    origin: 'https://address-binder-f2iqdlqaz-mmarinelli-horizenlabs-projects.vercel.app',
+    origin: 'https://address-binder.vercel.app',
+    origin: 'https://address-binder-git-main-mmarinelli-horizenlabs-projects.vercel.app/'
   }));
 app.use(express.json());
 
